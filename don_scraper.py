@@ -65,15 +65,16 @@ def get_show_links_imdb(shows):
         show = show.replace('_', ' ')
         if show == 'The Sopranos':
             pattern = f'<a href="\/title(.+)"\ntitle=".+" >Die Sopranos'
-        elif show == 'House':
-            pattern = f'<a href="\/title(.+)"\ntitle=".+" >House'
         else:
             pattern = f'<a href="\/title(.+)"\ntitle=".+" >{show}'
         show = show.replace(' ', '_')
         if show == 'Twin_Peaks':
-            print(re.findall(pattern, html)[0])
-        dictionary[show] = 'https://www.imdb.com/title'\
-                           + re.findall(pattern, html)[0]
+            dictionary[show] = 'https://www.imdb.com/title/tt0098936/'
+        elif show == 'House':
+            dictionary[show] = 'https://www.imdb.com/title/tt0412142/'
+        else:
+            dictionary[show] = 'https://www.imdb.com/title'\
+                                + re.findall(pattern, html)[0]
     return dictionary
 
 
@@ -141,6 +142,8 @@ def build_show_df_imdb(soup, show_index, show, df):
     with open(f'_RES/data/{show}/{show}_imdb_links.txt', 'w') as text_file:
         for link in reversed(soup.find_all('a', {'href': re.compile(r'episodes\?season')})):
             print('https://www.imdb.com' + link.get('href'), file=text_file)
+        if show == 'Twin_Peaks':
+            print('https://www.imdb.com/title/tt4093826/episodes?season=1', file=text_file)
     imdb_rating = soup.body.find(class_='ratingValue').text
     imdb_rating = float(imdb_rating.replace('/10', ''))
     link_imdb = SHOW_LINKS_IMDB[show]
