@@ -163,7 +163,8 @@ TV_SHOWS = [
             'Deadwood',
             'Six Feet Under',
             'True Detective',
-            'House'
+            'House',
+            'Dexter'
             ]
 
 

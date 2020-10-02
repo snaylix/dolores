@@ -163,7 +163,8 @@ TV_SHOWS = [
             'Deadwood',
             'Six Feet Under',
             'True Detective',
-            'House'
+            'House',
+            'Dexter'
             ]
 TV_SHOWS_UNDERSCORE = format_show_names(TV_SHOWS)
 SHOW_LINKS_WIKI = get_show_links_wiki(TV_SHOWS_UNDERSCORE)
@@ -174,13 +175,13 @@ for (show, show_link) in SHOW_LINKS_WIKI.items():
     soup = make_soup(show, show_link)
     SHOW_DF = build_show_df(soup, SHOW_INDEX, show, SHOW_DF)
     SHOW_INDEX += 1
-    print(f'created wiki data for {SHOW_INDEX}/11 ({show})')
+    print(f'created wiki data for {SHOW_INDEX}/{len(TV_SHOWS)} ({show})')
 SHOW_INDEX = 0
 for (show, show_link) in SHOW_LINKS_IMDB.items():
     soup = make_soup(show, show_link)
     SHOW_DF = build_show_df_imdb(soup, SHOW_INDEX, show, SHOW_DF)
     SHOW_INDEX += 1
-    print(f'created imdb data for {SHOW_INDEX}/11 ({show})')
+    print(f'created imdb data for {SHOW_INDEX}/{len(TV_SHOWS)} ({show})')
 print('saving dataframe ...')
 SHOW_DF.to_csv('_RES/data/Dolores_TV_Shows.csv', encoding='utf-8')
 print('all done')

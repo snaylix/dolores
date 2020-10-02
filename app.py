@@ -63,6 +63,8 @@ df_shows_info = df_shows_info.rename(columns=info_column_labels)
 df_episodes_dti = df_episodes.copy()
 df_episodes_dti.index = pd.DatetimeIndex(df_episodes.airdate)
 
+df_episodes[df_episodes['title'] == "The Iron Throne"]
+
 labels = dict(title="Show ",
               imdb_rating="IMDB Rating (0-10) ",
               airdate="First Airdate ",
@@ -75,14 +77,21 @@ fig1 = px.bar(df_shows,
               color='title',
               title="IMDB Show Rating (in descending order)",
               labels=labels,
-              template="none")
+              template="none",
+              color_discrete_sequence=px.colors.qualitative.Plotly)
 
-fig2 = px.bar_polar(df_episodes,
+num_slices = 11
+theta = [(i + 1.5) * 360 / num_slices for i in range(num_slices)]
+width = [360 / num_slices for _ in range(num_slices)]
+width
+
+fig3 = px.bar_polar(df_episodes,
                     r="season",
                     theta="show_title",
                     color="show_title",
                     title="Episodes per Show",
-                    template="none"
+                    template="none",
+                    color_discrete_sequence=px.colors.qualitative.Plotly
                     )
 
 fig1.update_layout(
@@ -95,7 +104,9 @@ fig1.update_layout(
 
 fig1.update_yaxes(range=[8, 10])
 
-fig2.update_layout(
+fig3.update_layout(
+    polar_radialaxis_ticks="",
+    polar_radialaxis_showticklabels=False,
     plot_bgcolor=colors['background'],
     # paper_bgcolor=colors['background'],
     font_color=colors['text'],
@@ -157,13 +168,13 @@ app.layout = html.Div(
             style={'textAlign': 'center',
                    'color': colors['text'],
                    'backgroundColor': colors['background'],
-                   'margin-top': 200,
-                   'margin-bottom': 200,
+                   'margin-top': 100,
+                   'margin-bottom': 50,
                    },
             children=[
                 dcc.Graph(
                     id='seasons',
-                    figure=fig2
+                    figure=fig3
                 )
                 ]),
 
@@ -214,6 +225,7 @@ def update_figure(year_range):
                      size_max=60,
                      title="U.S. Viewers (in millions) / Rating per Episode",
                      labels=labels,
+                     color_discrete_sequence=px.colors.qualitative.Plotly,
                      template="none"
                      )
 
@@ -224,7 +236,10 @@ def update_figure(year_range):
         paper_bgcolor=colors['background'],
         font_color=colors['text'],
         height=800,
-    )
+        )
+    fig.add_annotation( # add a text callout with arrow
+        text="Dexter Series Finale", x="2013-09-22", y=4.8, arrowhead=1, showarrow=True
+        )
     fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#ffffff')
     fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#ffffff')
 
